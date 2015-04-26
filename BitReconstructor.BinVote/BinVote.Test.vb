@@ -52,7 +52,7 @@ Public Module BinVoteTest
         Dim output As New MemoryStream(streamLength)
         FillAndPrepareStreams(etalon, inputs, streamLength)
         Dim stopWatch As New Stopwatch()        
-        stopWatch.Start() : BinVote.Process(inputs, weights, output, Nothing) : stopWatch.Stop()
+        stopWatch.Start() : BinVote.Process(inputs, weights, output, Nothing, Nothing) : stopWatch.Stop()
         Dim allOk = CompareStreams(etalon, output)
         For i = 0 To inputsCount - 1
             If inputs(i) IsNot Nothing Then inputs(i).Close()
@@ -65,7 +65,7 @@ Public Module BinVoteTest
     Public Function ShortTest(inputsCount As Integer, ByRef allOk As Boolean) As Double
         Dim result As Double
         Try
-            result = Test(inputsCount, BinVote.StreamBufferSize)
+            result = Test(inputsCount, BinVote.InternalBufferSize)
         Catch ex As Exception
             allOk = False : Return 0
         End Try
