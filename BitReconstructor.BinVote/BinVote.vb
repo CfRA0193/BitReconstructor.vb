@@ -51,7 +51,7 @@ Public Module BinVote
                 File.SetAttributes(outputName, FileAttributes.Normal)
                 File.Delete(outputName)
             End If
-            Dim output = File.Open(outputName, FileMode.CreateNew)
+            Dim output = New BufferedStream(File.Open(outputName, FileMode.CreateNew), StreamBufferSize)
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("Output:    {0}", outputName), ConsoleColor.Gray)
             Try
                 If BinVote.Process(task.InputStreams, output, messageOutHandler, progressUpdatedHandler) Then
