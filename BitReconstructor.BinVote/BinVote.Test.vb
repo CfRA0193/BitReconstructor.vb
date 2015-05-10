@@ -28,8 +28,7 @@ Public Module BinVoteTest
                 inputsData(j) = bt
             Next
             For k = 1 To maxDamageCount
-                Dim randomDamageIdx = CInt(Math.Round(rnd.NextDouble() * (inputsData.Length - 1)))
-                inputsData(randomDamageIdx) = rnd.GetRandomByte()
+                Dim randomDamageIdx = CInt(Math.Round(rnd.NextDouble() * (inputsData.Length - 1))) : inputsData(randomDamageIdx) = rnd.GetRandomByte()
             Next
             For j = 0 To inputs.Length - 1
                 inputs(j).WriteByte(inputsData(j))

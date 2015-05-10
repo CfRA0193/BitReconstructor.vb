@@ -28,10 +28,15 @@ Module BinVoteConsole
     End Sub
 
     Private Sub ProgressUpdatedHandler(progress As Single)
-        Console.Write(vbCr + " " + "Progress:  {0:0.00} %", progress * 100.0F)
+        Console.Write(vbCr + " Progress:  {0:0.00} %", progress * 100.0F)
     End Sub
 
     Sub Main(args As String())
-        LogoOut() : BinVote.Process(args, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler)
+        LogoOut()
+        If BinVote.Process(args, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler) Then
+            Console.WriteLine(vbCrLf + " Processing: OK!")
+        Else
+            Console.WriteLine(vbCrLf + " Processing: ERROR!")
+        End If
     End Sub
 End Module
