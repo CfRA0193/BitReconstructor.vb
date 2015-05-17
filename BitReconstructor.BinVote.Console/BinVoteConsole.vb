@@ -2,6 +2,9 @@
 Imports BitReconstructor.BinVote
 
 Module BinVoteConsole
+
+    Private Const _outputNameSpecified = False
+
     Private Sub LogoOut()
         Console.ForegroundColor = ConsoleColor.Green
         Console.WriteLine("                              ")
@@ -17,6 +20,7 @@ Module BinVoteConsole
         Console.WriteLine(" █████ █████▒  █████   ░█████ ")
         Console.WriteLine(" ▒▒▒▒▒ ▒▒▒░    ▒▒▒▒▒      ▒▓▒ ")
         Console.WriteLine(" R E C O N S T R U C T O R    ")
+        Console.WriteLine(" " + My.Application.Info.Version.ToString())
         Console.ForegroundColor = ConsoleColor.Gray
         Console.WriteLine()
     End Sub
@@ -33,7 +37,7 @@ Module BinVoteConsole
 
     Sub Main(args As String())
         LogoOut()
-        If BinVote.Process(args, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler) Then
+        If BinVote.Process(args, _outputNameSpecified, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler) Then
             Console.WriteLine(vbCrLf + " Processing: OK!")
         Else
             Console.WriteLine(vbCrLf + " Processing: ERROR!")

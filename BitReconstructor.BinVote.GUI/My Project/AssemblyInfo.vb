@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("BitReconstructor.BinVote")> 
+<Assembly: AssemblyTitle("BitReconstructor.BinVote.GUI")> 
 <Assembly: AssemblyDescription("Low-level data correction via binary voting")> 
 <Assembly: AssemblyCompany("Artem Drobanov (DrAF)")> 
-<Assembly: AssemblyProduct("BitReconstructor.BinVote")> 
+<Assembly: AssemblyProduct("BitReconstructor.BinVote.GUI")> 
 <Assembly: AssemblyCopyright("Copyright © DrAF 2015")> 
 <Assembly: AssemblyTrademark("BitReconstructor")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("cc0d1ae1-1d71-422a-96c2-44f70f990a4a")> 
+<Assembly: Guid("799d1f87-ef7d-4b18-be43-709c1650912a")> 
 
 ' Version information for an assembly consists of the following four values:
 '

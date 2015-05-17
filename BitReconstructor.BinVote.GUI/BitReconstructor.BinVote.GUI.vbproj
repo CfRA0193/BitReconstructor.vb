@@ -4,30 +4,33 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F83340A1-B8BD-4AF9-8A50-4A086A3824A0}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>BitReconstructor.BinVote</RootNamespace>
-    <AssemblyName>BitReconstructor.BinVote</AssemblyName>
+    <ProjectGuid>{DD0B2715-9EAF-4998-9656-3399A13D4195}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>BitReconstructor.BinVote.GUI.My.MyApplication</StartupObject>
+    <RootNamespace>BitReconstructor.BinVote.GUI</RootNamespace>
+    <AssemblyName>BitReconstructor.BinVote.GUI</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
+    <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\output\dll\</OutputPath>
-    <DocumentationFile>BitReconstructor.BinVote.xml</DocumentationFile>
+    <OutputPath>..\output\BitReconstructor.BinVote.GUI\bin-debug\</OutputPath>
+    <DocumentationFile>BitReconstructor.BinVote.GUI.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>false</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>..\output\dll\</OutputPath>
-    <DocumentationFile>BitReconstructor.BinVote.xml</DocumentationFile>
+    <OutputPath>..\output\BitReconstructor.BinVote.GUI\bin-release\</OutputPath>
+    <DocumentationFile>BitReconstructor.BinVote.GUI.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -43,8 +46,14 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Bwl.Framework">
+      <HintPath>..\refs\Bwl.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -56,14 +65,27 @@
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
     <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BinVote.Test.vb" />
-    <Compile Include="BinVote.vb" />
+    <Compile Include="FileSelector.Designer.vb">
+      <DependentUpon>FileSelector.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FileSelector.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MainForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -81,6 +103,12 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FileSelector.resx">
+      <DependentUpon>FileSelector.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -98,6 +126,13 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BitReconstructor.BinVote\BitReconstructor.BinVote.vbproj">
+      <Project>{f83340a1-b8bd-4af9-8a50-4a086a3824a0}</Project>
+      <Name>BitReconstructor.BinVote</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

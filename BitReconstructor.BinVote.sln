@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitReconstructor.BinVote.GUI", "BitReconstructor.BinVote.GUI\BitReconstructor.BinVote.GUI.vbproj", "{DD0B2715-9EAF-4998-9656-3399A13D4195}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitReconstructor.BinVote", "BitReconstructor.BinVote\BitReconstructor.BinVote.vbproj", "{F83340A1-B8BD-4AF9-8A50-4A086A3824A0}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "BitReconstructor.BinVote.Console", "BitReconstructor.BinVote.Console\BitReconstructor.BinVote.Console.vbproj", "{AF18DC3F-BB61-4D1F-A9C1-F18969257ACD}"
+EndProject
+Global
+	GlobalSection(AutomaticVersions) = postSolution
+		UpdateAssemblyVersion = True
+		UpdateAssemblyFileVersion = True
+		UpdateAssemblyInfoVersion = True
+		AssemblyVersionSettings = None.None.DateStamp.Increment
+		AssemblyFileVersionSettings = None.None.DateStamp.Increment
+		AssemblyInfoVersionSettings = None.None.DateStamp.Increment
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD0B2715-9EAF-4998-9656-3399A13D4195}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD0B2715-9EAF-4998-9656-3399A13D4195}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD0B2715-9EAF-4998-9656-3399A13D4195}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD0B2715-9EAF-4998-9656-3399A13D4195}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F83340A1-B8BD-4AF9-8A50-4A086A3824A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F83340A1-B8BD-4AF9-8A50-4A086A3824A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F83340A1-B8BD-4AF9-8A50-4A086A3824A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F83340A1-B8BD-4AF9-8A50-4A086A3824A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF18DC3F-BB61-4D1F-A9C1-F18969257ACD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF18DC3F-BB61-4D1F-A9C1-F18969257ACD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF18DC3F-BB61-4D1F-A9C1-F18969257ACD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF18DC3F-BB61-4D1F-A9C1-F18969257ACD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
