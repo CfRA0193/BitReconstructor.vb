@@ -73,7 +73,7 @@ Public Module BinVote
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("The number of input streams after filtering by size is {0}, the binary vote is impossible!", streamsCount), ConsoleColor.Red)
             Return False
         Else
-            If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("Voting: {0,4} streams ({1} bytes each))", streamsCount, inputs(0).Length), ConsoleColor.Gray)
+            If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("Voting: {0,4} streams ({1} bytes each)", streamsCount, inputs(0).Length), ConsoleColor.Gray)
         End If
 
         Dim inputsFilteredList As New List(Of Stream)
