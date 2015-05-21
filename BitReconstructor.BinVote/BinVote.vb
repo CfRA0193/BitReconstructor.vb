@@ -75,7 +75,6 @@ Public Module BinVote
         Else
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("Voting: {0,4} streams ({1} bytes each)", streamsCount, inputs(0).Length), ConsoleColor.Gray)
         End If
-
         Dim inputsFilteredList As New List(Of Stream)
         Dim weightsFilteredList As New List(Of Integer)
         For i = 0 To inputs.Length - 1
@@ -86,7 +85,6 @@ Public Module BinVote
         inputs = inputsFilteredList.ToArray() : weights = weightsFilteredList.ToArray()
         Dim streamLength = inputs(0).Length
         Dim fullBufferIters = CLng(Math.Floor(streamLength / streamBufferSize))
-
         Dim inputBuffers As Byte()() = New Byte(inputs.Length - 1)() {}
         Dim outputBuffer As Byte()
         If fullBufferIters <> 0 Then
@@ -99,7 +97,6 @@ Public Module BinVote
                 If progressUpdatedHandler IsNot Nothing Then progressUpdatedHandler.Invoke((i + 1) / CSng(fullBufferIters + 1))
             Next
         End If
-
         Dim remainBytes = streamLength - (streamBufferSize * fullBufferIters)
         If remainBytes <> 0 Then
             For i = 0 To inputs.Length - 1
@@ -108,7 +105,6 @@ Public Module BinVote
             outputBuffer = New Byte(remainBytes - 1) {}
             FillInputBuffers(inputBuffers, inputs) : Process(inputBuffers, weights, outputBuffer) : output.Write(outputBuffer, 0, outputBuffer.Length)
         End If
-
         If progressUpdatedHandler IsNot Nothing Then progressUpdatedHandler.Invoke(1.0F)
         output.Flush() : Return True
     End Function
@@ -151,15 +147,14 @@ Public Module BinVote
                 If inputs(i).Length = inputs(j).Length Then equals(i) += weights(i)
             Next
         Next
-
         Dim maxEqualsVal = equals(0)
+        Dim maxEqualsLength = inputs(0).Length
         Dim maxEqualsIdx As Integer = 0
         For i = 1 To equals.Length - 1
-            If equals(i) >= maxEqualsVal Then
-                maxEqualsVal = equals(i) : maxEqualsIdx = i
+            If equals(i) >= maxEqualsVal AndAlso inputs(i).Length > maxEqualsLength Then
+                maxEqualsVal = equals(i) : maxEqualsLength = inputs(i).Length : maxEqualsIdx = i
             End If
         Next
-
         Dim dominLength = inputs(maxEqualsIdx).Length
         Dim dominLengthCount As Integer = 0
         For i = 0 To inputs.Length - 1
