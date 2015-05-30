@@ -8,7 +8,7 @@ Public Class FileSelector
             Return _fileTextBox.Text
         End Get
         Set(value As String)
-            _fileTextBox.Text = value
+            _fileTextBox.Text = value : FilenameProcessing()
         End Set
     End Property
 
@@ -17,7 +17,26 @@ Public Class FileSelector
             Return _toUseCheckBox.Checked
         End Get
         Set(value As Boolean)
-            _toUseCheckBox.Checked = value
+            _toUseCheckBox.Checked = value : FilenameProcessing()
+        End Set
+    End Property
+
+    Public Property InUse As Boolean
+        Get
+            Return _inUseCheckBox.Checked
+        End Get
+        Set(value As Boolean)
+            _inUseCheckBox.Checked = value : If Not value Then InputSize = 0 : FilenameProcessing()
+        End Set
+    End Property
+
+    Public Property InputSize As Integer
+        Get
+            _inputSizeTextBox.Text = _inputSizeTextBox.Text.Trim()
+            Return If(_inputSizeTextBox.Text <> String.Empty, Convert.ToInt32(_inputSizeTextBox.Text), 0)
+        End Get
+        Set(value As Integer)
+            _inputSizeTextBox.Text = If(value <> 0, value.ToString(), String.Empty)
         End Set
     End Property
 
@@ -27,38 +46,19 @@ Public Class FileSelector
         End Get
         Set(value As Boolean)
             _writeMode = value
-            If value Then
-                _toUseCheckBox.Text = "[ Target / Целевой ]"
-            Else
-                _toUseCheckBox.Text = String.Format("[ Source / Источник ] №{0}", Number)
-            End If
+            _toUseCheckBox.Text = If(value, "[ Target / Целевой ]", String.Format("[ Source / Источник ] №{0}", Number))
+            FilenameProcessing()
         End Set
     End Property
 
     Public Property Number As Integer
 
     Public Sub New()
-        InitializeComponent()
-        WriteMode = False
-        TrimFilenameAndRecolor()
+        InitializeComponent() : WriteMode = False : FilenameProcessing()
     End Sub
 
     Public Sub SelectFile()
-        If WriteMode Then
-            Dim sfd = New SaveFileDialog
-            With sfd
-                .RestoreDirectory = True
-                .AddExtension = True
-                .DefaultExt = ".*"
-                .Filter = "All files (*.*)|*.*"
-            End With
-            If sfd.ShowDialog() = DialogResult.OK Then
-                _toUseCheckBox.Checked = True
-                _fileTextBox.Text = sfd.FileName
-            Else
-                _toUseCheckBox.Checked = False
-            End If
-        Else
+        If Not WriteMode Then
             Dim ofd = New OpenFileDialog
             With ofd
                 .RestoreDirectory = True
@@ -67,36 +67,55 @@ Public Class FileSelector
                 .Filter = "All files (*.*)|*.*"
             End With
             If ofd.ShowDialog() = DialogResult.OK Then
-                _toUseCheckBox.Checked = True
-                _fileTextBox.Text = ofd.FileName
+                _toUseCheckBox.Checked = True : _fileTextBox.Text = ofd.FileName
+            Else
+                _toUseCheckBox.Checked = False
+            End If
+        Else
+            Dim sfd = New SaveFileDialog
+            With sfd
+                .RestoreDirectory = True
+                .AddExtension = True
+                .DefaultExt = ".*"
+                .Filter = "All files (*.*)|*.*"
+            End With
+            If sfd.ShowDialog() = DialogResult.OK Then
+                _toUseCheckBox.Checked = True : _fileTextBox.Text = sfd.FileName
             Else
                 _toUseCheckBox.Checked = False
             End If
         End If
     End Sub
 
-    Private Sub TrimFilenameAndRecolor()
-        _fileTextBox.Text = _fileTextBox.Text.Trim()
-        If _fileTextBox.Text = String.Empty Then
-            _fileTextBox.BackColor = Color.AliceBlue
-        Else
-            If File.Exists(_fileTextBox.Text) Then
-                _fileTextBox.BackColor = Color.DarkSeaGreen
+    Private Sub FilenameProcessing()
+        If Not _writeMode Then
+            _fileTextBox.Text = _fileTextBox.Text.Trim()
+            If _fileTextBox.Text = String.Empty Then
+                _fileTextBox.BackColor = Color.AliceBlue
             Else
-                _fileTextBox.BackColor = Color.Salmon
+                If File.Exists(_fileTextBox.Text) Then
+                    _fileTextBox.BackColor = If(_inUseCheckBox.Checked, Color.PaleGreen, Color.LemonChiffon)
+                    InputSize = (New FileInfo(_fileTextBox.Text)).Length
+                Else
+                    _fileTextBox.BackColor = Color.Salmon
+                    InputSize = 0
+                End If
             End If
+        Else
+            _fileTextBox.BackColor = Color.PaleGreen
         End If
+        _inputSizeTextBox.BackColor = _fileTextBox.BackColor
     End Sub
 
     Private Sub _selectButton_Click(sender As Object, e As EventArgs) Handles _selectButton.Click
-        SelectFile() : TrimFilenameAndRecolor()
+        SelectFile() : FilenameProcessing()
     End Sub
 
     Private Sub _toUseCheckBox_Click(sender As Object, e As EventArgs) Handles _toUseCheckBox.Click
-        TrimFilenameAndRecolor()
+        FilenameProcessing()
     End Sub
 
     Private Sub _fileTextBox_TextChanged(sender As Object, e As EventArgs) Handles _fileTextBox.TextChanged
-        TrimFilenameAndRecolor()
+        FilenameProcessing()
     End Sub
 End Class

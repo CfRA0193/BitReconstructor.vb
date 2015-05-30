@@ -50,7 +50,7 @@ Public Class MainForm
 
     Private Sub ProcessingThread()
         MessageOutHandler("{", ConsoleColor.Gray)
-        If BinVote.Process(GetArgs(), _outputNameSpecified, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler) Then
+        If BinVote.Process(GetArgs(), _outputNameSpecified, True, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler) Then
             MessageOutHandler("Processing: OK!", ConsoleColor.Gray)
         Else
             MessageOutHandler("Processing: ERROR!", ConsoleColor.Gray)
@@ -60,20 +60,42 @@ Public Class MainForm
     End Sub
 
     Private Sub _processButton_Click(sender As Object, e As EventArgs) Handles _processButton.Click
-        If Not _threadWorking Then
-            _workerThread = New Thread(AddressOf ProcessingThread)
-            _threadWorking = True
-            With _workerThread
-                .Name = "BinVote.Process"
-                .Priority = ThreadPriority.Lowest
-                .IsBackground = True
-                .Start()
-            End With
-            _logger.AddMessage("BinVote.Process")
-        End If
+        SyncLock _checkUpTimer
+            If Not _threadWorking Then
+                _workerThread = New Thread(AddressOf ProcessingThread) : _threadWorking = True
+                With _workerThread
+                    .Name = "BinVote.Process"
+                    .Priority = ThreadPriority.Lowest
+                    .IsBackground = True
+                    .Start()
+                End With
+                _logger.AddMessage("BinVote.Process")
+            End If
+        End SyncLock
     End Sub
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Text = My.Application.Info.Title.ToString() + " [" + My.Application.Info.Version.ToString() + "]"
+    End Sub
+
+    Private Sub _checkUpTimer_Tick(sender As Object, e As EventArgs) Handles _checkUpTimer.Tick
+        SyncLock _checkUpTimer
+            If _threadWorking Then Return
+            Dim inputsCount As Integer, outputSize As Long, outputFilename As String = String.Empty
+            If BinVote.CheckUp(GetArgs(), inputsCount, outputSize, outputFilename, AddressOf MessageOutHandler) Then
+                If inputsCount >= BinVote.StreamsCountMin Then
+                    FileSelector1.InUse = (FileSelector1.InputSize = outputSize)
+                    FileSelector2.InUse = (FileSelector2.InputSize = outputSize)
+                    FileSelector3.InUse = (FileSelector3.InputSize = outputSize)
+                    FileSelector4.InUse = (FileSelector4.InputSize = outputSize)
+                    FileSelector5.InUse = (FileSelector5.InputSize = outputSize)
+                    _processingGroupBox.Enabled = True : _processButton.Enabled = True : _processProgressBar.Enabled = True
+                    Return
+                End If
+            End If
+            FileSelector1.InUse = False : FileSelector2.InUse = False : FileSelector3.InUse = False : FileSelector4.InUse = False : FileSelector5.InUse = False
+            FileSelector6.InUse = False
+            _processingGroupBox.Enabled = False : _processButton.Enabled = False : _processProgressBar.Enabled = False
+        End SyncLock
     End Sub
 End Class
