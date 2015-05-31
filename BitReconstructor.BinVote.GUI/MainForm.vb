@@ -56,7 +56,7 @@ Public Class MainForm
             MessageOutHandler("Processing: ERROR!", ConsoleColor.Gray)
         End If
         MessageOutHandler("}", ConsoleColor.Gray)
-        _threadWorking = False
+        Thread.Sleep(1000) : _threadWorking = False
     End Sub
 
     Private Sub _processButton_Click(sender As Object, e As EventArgs) Handles _processButton.Click
@@ -75,20 +75,20 @@ Public Class MainForm
     End Sub
 
     Private Sub MainForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Text = My.Application.Info.Title.ToString() + " [" + My.Application.Info.Version.ToString() + "]"
+        Me.Text = My.Application.Info.Title.ToString() + " [" + My.Application.Info.Version.ToString() + "]" + BinVote.AuthorString
     End Sub
 
     Private Sub _checkUpTimer_Tick(sender As Object, e As EventArgs) Handles _checkUpTimer.Tick
         SyncLock _checkUpTimer
             If _threadWorking Then Return
             Dim inputsCount As Integer, outputSize As Long, outputFilename As String = String.Empty
-            If BinVote.CheckUp(GetArgs(), inputsCount, outputSize, outputFilename, AddressOf MessageOutHandler) Then
+            If BinVote.CheckUp(GetArgs(), inputsCount, outputSize, outputFilename) Then
                 If inputsCount >= BinVote.StreamsCountMin Then
-                    FileSelector1.InUse = (FileSelector1.InputSize = outputSize)
-                    FileSelector2.InUse = (FileSelector2.InputSize = outputSize)
-                    FileSelector3.InUse = (FileSelector3.InputSize = outputSize)
-                    FileSelector4.InUse = (FileSelector4.InputSize = outputSize)
-                    FileSelector5.InUse = (FileSelector5.InputSize = outputSize)
+                    FileSelector1.InUse = (FileSelector1.FileSize = outputSize)
+                    FileSelector2.InUse = (FileSelector2.FileSize = outputSize)
+                    FileSelector3.InUse = (FileSelector3.FileSize = outputSize)
+                    FileSelector4.InUse = (FileSelector4.FileSize = outputSize)
+                    FileSelector5.InUse = (FileSelector5.FileSize = outputSize)
                     _processingGroupBox.Enabled = True : _processButton.Enabled = True : _processProgressBar.Enabled = True
                     Return
                 End If

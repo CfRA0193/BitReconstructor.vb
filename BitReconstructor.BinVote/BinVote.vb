@@ -5,17 +5,18 @@ Public Delegate Sub ProgressUpdatedDelegate(progress As Single)
 Public Delegate Sub MessageOutDelegate(message As String, textColor As ConsoleColor)
 
 Public Module BinVote
+    Public Const AuthorString = " by Artem Drobanov (DrAF)"
     Public Const BitReconstructorPrefix = "BitReconstructor."
     Public Const StreamsCountMin As Integer = 3
-    Public Const StreamBufferSize As Integer = 128 * 1024 * 1024
-    Public Const InternalBufferSize As Integer = 8 * 1024 * 1024
+    Public Const StreamBufferSize As Integer = 128 * (1024 * 1024)
+    Public Const InternalBufferSize As Integer = 8 * (1024 * 1024)
 
     Public Class BinVoteTask
         Public Property InputStreams As Stream()
         Public Property OutputFilename As String
         Public Property OutputStream As Stream
         Public ReadOnly Property InputsCount As Integer
-            Get                
+            Get
                 Return If(InputStreams IsNot Nothing, InputStreams.Length, -1)
             End Get
         End Property
@@ -29,7 +30,7 @@ Public Module BinVote
         Public Sub New(outputFilename As String, inputStreams As Stream())
             Me.OutputFilename = outputFilename : Me.InputStreams = inputStreams
         End Sub
-        Public Sub Close(messageOutHandler As MessageOutDelegate)
+        Public Sub Close()
             Try
                 If OutputStream IsNot Nothing Then
                     OutputStream.Flush() : OutputStream.Close() : OutputStream = Nothing
@@ -38,10 +39,7 @@ Public Module BinVote
                     If stream IsNot Nothing Then stream.Close() : stream = Nothing
                 Next
                 InputStreams = Nothing
-            Catch ex As Exception
-                If messageOutHandler IsNot Nothing Then
-                    messageOutHandler.Invoke(String.Empty, ConsoleColor.Gray) : messageOutHandler.Invoke(String.Format(ex.ToString()), ConsoleColor.Red)
-                End If
+            Catch
             End Try
         End Sub
     End Class
@@ -53,8 +51,7 @@ Public Module BinVote
 
     Public Function ShortTest(inputsCount As Integer, messageOutHandler As MessageOutDelegate) As Boolean
         If inputsCount < StreamsCountMin Then inputsCount = StreamsCountMin
-        Dim allOk As Boolean
-        Dim result = BinVoteTest.ShortTest(inputsCount, allOk)
+        Dim allOk As Boolean : Dim result = BinVoteTest.ShortTest(inputsCount, allOk)
         If messageOutHandler IsNot Nothing Then
             messageOutHandler.Invoke(String.Format("Inputs: {0,6}", inputsCount), ConsoleColor.Green)
             messageOutHandler.Invoke(String.Format("Performance: {0:0.00} Mb/s", result / (1024 * 1024)), ConsoleColor.Green)
@@ -63,10 +60,10 @@ Public Module BinVote
         Return allOk
     End Function
 
-    Public Function CheckUp(args As String(), ByRef inputsCount As Integer, ByRef outputSize As Long, ByRef outputFilename As String, messageOutHandler As MessageOutDelegate) As Boolean
+    Public Function CheckUp(args As String(), ByRef inputsCount As Integer, ByRef outputSize As Long, ByRef outputFilename As String) As Boolean
         Dim task = BinVote.GetBinVoteTask(BitReconstructorPrefix, args, False, False, Nothing, Nothing)
         If task IsNot Nothing Then
-            inputsCount = task.InputsCount : outputSize = task.OutputSize : outputFilename = task.OutputFilename : task.Close(messageOutHandler)
+            inputsCount = task.InputsCount : outputSize = task.OutputSize : outputFilename = task.OutputFilename : task.Close()
             Return True
         Else
             inputsCount = 0 : outputSize = 0 : outputFilename = String.Empty
@@ -98,7 +95,7 @@ Public Module BinVote
     End Function
 
     Public Function Process(inputs As Stream(), output As Stream, messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate, Optional ByVal streamBufferSize As Integer = InternalBufferSize) As Boolean
-        Dim weights As Integer() = New Integer(inputs.Length - 1) {}
+        Dim weights = New Integer(inputs.Length - 1) {}
         For i = 0 To weights.Length - 1
             weights(i) = 1
         Next
@@ -118,7 +115,7 @@ Public Module BinVote
         End If
         Dim streamLength = inputs(0).Length
         Dim fullBufferIters = CLng(Math.Floor(streamLength / streamBufferSize))
-        Dim inputBuffers As Byte()() = New Byte(inputs.Length - 1)() {}
+        Dim inputBuffers = New Byte(inputs.Length - 1)() {}
         Dim outputBuffer As Byte()
         If fullBufferIters <> 0 Then
             For i = 0 To inputs.Length - 1
@@ -143,21 +140,26 @@ Public Module BinVote
     End Function
 
     Private Sub DominLengthStreamFilter(ByRef inputs As Stream(), ByRef weights As Integer(), ByRef outputSize As Long, ByRef outputCount As Integer)
-        Dim equals As Integer() = New Integer(inputs.Length - 1) {}
+        Dim equals = New Integer(inputs.Length - 1) {}
         For i = 0 To inputs.Length - 1
             For j = 0 To inputs.Length - 1
                 If inputs(i).Length = inputs(j).Length Then equals(i) += weights(i)
             Next
         Next
         Dim maxEqualsVal = equals(0)
-        Dim maxEqualsLength = inputs(0).Length
         Dim maxEqualsIdx As Integer = 0
         For i = 1 To equals.Length - 1
-            If equals(i) >= maxEqualsVal AndAlso inputs(i).Length > maxEqualsLength Then
-                maxEqualsVal = equals(i) : maxEqualsLength = inputs(i).Length : maxEqualsIdx = i
+            If equals(i) > maxEqualsVal Then
+                maxEqualsVal = equals(i) : maxEqualsIdx = i
             End If
         Next
-        outputSize = inputs(maxEqualsIdx).Length : outputCount = 0
+        Dim maxEqualsLength = 0
+        For i = 1 To equals.Length - 1
+            If equals(i) = maxEqualsVal AndAlso inputs(i).Length > maxEqualsLength Then
+                maxEqualsLength = inputs(i).Length
+            End If
+        Next
+        outputSize = maxEqualsLength : outputCount = 0
         For i = 0 To inputs.Length - 1
             If inputs(i).Length = outputSize Then
                 outputCount += 1
@@ -188,7 +190,7 @@ Public Module BinVote
                     If File.Exists(arg) Then streams.Add(New BufferedStream(File.Open(arg, FileMode.Open), StreamBufferSize))
                 Next
                 task.InputStreams = streams.ToArray()
-                Dim weights As Integer() = New Integer(task.InputStreams.Length - 1) {}
+                Dim weights = New Integer(task.InputStreams.Length - 1) {}
                 For i = 0 To weights.Length - 1
                     weights(i) = 1
                 Next
@@ -213,7 +215,7 @@ Public Module BinVote
         Try
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("Output:    {0}", task.OutputFilename), ConsoleColor.Gray)
             If BinVote.Process(task.InputStreams, task.OutputStream, messageOutHandler, progressUpdatedHandler) Then messageOutHandler.Invoke(String.Empty, ConsoleColor.Gray)
-            task.Close(messageOutHandler)
+            task.Close()
         Catch ex As Exception
             If messageOutHandler IsNot Nothing Then
                 messageOutHandler.Invoke(String.Empty, ConsoleColor.Gray) : messageOutHandler.Invoke(String.Format(ex.ToString()), ConsoleColor.Red)
@@ -224,8 +226,7 @@ Public Module BinVote
     Private Sub FillInputBuffers(inputBuffers As Byte()(), inputs As Stream())
         Dim rowsCount = inputBuffers(0).Length
         Parallel.For(0, inputs.Length, Sub(i As Integer)
-                                           Dim done As Integer = 0
-                                           Dim task As Integer = rowsCount
+                                           Dim done As Integer = 0 : Dim task As Integer = rowsCount
                                            While task > 0
                                                done += inputs(i).Read(inputBuffers(i), done, task) : task = rowsCount - done
                                            End While

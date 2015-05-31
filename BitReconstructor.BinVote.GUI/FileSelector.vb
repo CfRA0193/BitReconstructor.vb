@@ -26,17 +26,17 @@ Public Class FileSelector
             Return _inUseCheckBox.Checked
         End Get
         Set(value As Boolean)
-            _inUseCheckBox.Checked = value : If Not value Then InputSize = 0 : FilenameProcessing()
+            _inUseCheckBox.Checked = value : If Not value Then FileSize = 0 : FilenameProcessing()
         End Set
     End Property
 
-    Public Property InputSize As Integer
+    Public Property FileSize As Integer
         Get
-            _inputSizeTextBox.Text = _inputSizeTextBox.Text.Trim()
-            Return If(_inputSizeTextBox.Text <> String.Empty, Convert.ToInt32(_inputSizeTextBox.Text), 0)
+            _fileSizeTextBox.Text = _fileSizeTextBox.Text.Trim()
+            Return If(_fileSizeTextBox.Text <> String.Empty, Convert.ToInt32(_fileSizeTextBox.Text), 0)
         End Get
         Set(value As Integer)
-            _inputSizeTextBox.Text = If(value <> 0, value.ToString(), String.Empty)
+            _fileSizeTextBox.Text = If(value <> 0, value.ToString(), String.Empty)
         End Set
     End Property
 
@@ -88,23 +88,22 @@ Public Class FileSelector
     End Sub
 
     Private Sub FilenameProcessing()
+        If Not _toUseCheckBox.Checked Then _fileTextBox.Text = String.Empty : _fileTextBox.Text = _fileTextBox.Text.Trim()
         If Not _writeMode Then
-            _fileTextBox.Text = _fileTextBox.Text.Trim()
             If _fileTextBox.Text = String.Empty Then
                 _fileTextBox.BackColor = Color.AliceBlue
             Else
                 If File.Exists(_fileTextBox.Text) Then
-                    _fileTextBox.BackColor = If(_inUseCheckBox.Checked, Color.PaleGreen, Color.LemonChiffon)
-                    InputSize = (New FileInfo(_fileTextBox.Text)).Length
+                    _fileTextBox.BackColor = If(_inUseCheckBox.Checked, Color.PaleGreen, Color.LemonChiffon) : FileSize = (New FileInfo(_fileTextBox.Text)).Length
                 Else
-                    _fileTextBox.BackColor = Color.Salmon
-                    InputSize = 0
+                    _fileTextBox.BackColor = Color.Salmon : FileSize = 0
                 End If
             End If
+            _fileSizeTextBox.BackColor = _fileTextBox.BackColor
         Else
-            _fileTextBox.BackColor = Color.PaleGreen
+            If _fileTextBox.Text = String.Empty Then _toUseCheckBox.Checked = False
+            _fileTextBox.BackColor = Color.PaleGreen : _fileSizeTextBox.BackColor = Me.BackColor : _inUseCheckBox.Enabled = False : _fileSizeTextBox.Enabled = False
         End If
-        _inputSizeTextBox.BackColor = _fileTextBox.BackColor
     End Sub
 
     Private Sub _selectButton_Click(sender As Object, e As EventArgs) Handles _selectButton.Click

@@ -2,7 +2,6 @@
 Imports BitReconstructor.BinVote
 
 Module BinVoteConsole
-
     Private Const _outputNameSpecified = True
 
     Private Sub LogoOut()
@@ -21,6 +20,8 @@ Module BinVoteConsole
         Console.WriteLine(" ▒▒▒▒▒ ▒▒▒░    ▒▒▒▒▒      ▒▓▒ ")
         Console.WriteLine(" R E C O N S T R U C T O R    ")
         Console.WriteLine(" " + My.Application.Info.Version.ToString())
+        Console.ForegroundColor = ConsoleColor.DarkGreen
+        Console.WriteLine(BinVote.AuthorString)
         Console.ForegroundColor = ConsoleColor.Gray
         Console.WriteLine()
     End Sub

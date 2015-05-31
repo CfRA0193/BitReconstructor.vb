@@ -77,12 +77,12 @@ Partial Class MainForm
         '_checkUpTimer
         '
         Me._checkUpTimer.Enabled = True
-        Me._checkUpTimer.Interval = 1000
+        Me._checkUpTimer.Interval = 500
         '
         'FileSelector6
         '
         Me.FileSelector6.Filename = ""
-        Me.FileSelector6.InputSize = 0
+        Me.FileSelector6.FileSize = 0
         Me.FileSelector6.InUse = False
         Me.FileSelector6.Location = New System.Drawing.Point(12, 297)
         Me.FileSelector6.Name = "FileSelector6"
@@ -95,7 +95,7 @@ Partial Class MainForm
         'FileSelector5
         '
         Me.FileSelector5.Filename = ""
-        Me.FileSelector5.InputSize = 0
+        Me.FileSelector5.FileSize = 0
         Me.FileSelector5.InUse = False
         Me.FileSelector5.Location = New System.Drawing.Point(12, 243)
         Me.FileSelector5.Name = "FileSelector5"
@@ -108,7 +108,7 @@ Partial Class MainForm
         'FileSelector4
         '
         Me.FileSelector4.Filename = ""
-        Me.FileSelector4.InputSize = 0
+        Me.FileSelector4.FileSize = 0
         Me.FileSelector4.InUse = False
         Me.FileSelector4.Location = New System.Drawing.Point(12, 189)
         Me.FileSelector4.Name = "FileSelector4"
@@ -121,7 +121,7 @@ Partial Class MainForm
         'FileSelector3
         '
         Me.FileSelector3.Filename = ""
-        Me.FileSelector3.InputSize = 0
+        Me.FileSelector3.FileSize = 0
         Me.FileSelector3.InUse = False
         Me.FileSelector3.Location = New System.Drawing.Point(12, 135)
         Me.FileSelector3.Name = "FileSelector3"
@@ -134,7 +134,7 @@ Partial Class MainForm
         'FileSelector2
         '
         Me.FileSelector2.Filename = ""
-        Me.FileSelector2.InputSize = 0
+        Me.FileSelector2.FileSize = 0
         Me.FileSelector2.InUse = False
         Me.FileSelector2.Location = New System.Drawing.Point(12, 81)
         Me.FileSelector2.Name = "FileSelector2"
@@ -147,7 +147,7 @@ Partial Class MainForm
         'FileSelector1
         '
         Me.FileSelector1.Filename = ""
-        Me.FileSelector1.InputSize = 0
+        Me.FileSelector1.FileSize = 0
         Me.FileSelector1.InUse = False
         Me.FileSelector1.Location = New System.Drawing.Point(12, 27)
         Me.FileSelector1.Name = "FileSelector1"
