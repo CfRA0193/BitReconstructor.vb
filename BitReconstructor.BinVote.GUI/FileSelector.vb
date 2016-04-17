@@ -117,4 +117,8 @@ Public Class FileSelector
     Private Sub _fileTextBox_TextChanged(sender As Object, e As EventArgs) Handles _fileTextBox.TextChanged
         FilenameProcessing()
     End Sub
+
+    Private Sub _fileSizeTextBox_KeyPress(sender As Object, e As KeyPressEventArgs) Handles _fileSizeTextBox.KeyPress
+        e.Handled = True
+    End Sub
 End Class

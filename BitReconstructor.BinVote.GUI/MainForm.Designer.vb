@@ -58,7 +58,7 @@ Partial Class MainForm
         '_processButton
         '
         Me._processButton.Enabled = False
-        Me._processButton.Location = New System.Drawing.Point(6, 19)
+        Me._processButton.Location = New System.Drawing.Point(7, 19)
         Me._processButton.Name = "_processButton"
         Me._processButton.Size = New System.Drawing.Size(72, 23)
         Me._processButton.TabIndex = 1

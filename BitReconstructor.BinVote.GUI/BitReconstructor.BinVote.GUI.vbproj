@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
-    <OutputPath>..\output\BitReconstructor.BinVote.GUI\bin-debug\</OutputPath>
+    <OutputPath>..\debug\BitReconstructor.BinVote.GUI\bin\</OutputPath>
     <DocumentationFile>BitReconstructor.BinVote.GUI.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
@@ -29,7 +29,7 @@
     <DefineDebug>false</DefineDebug>
     <DefineTrace>false</DefineTrace>
     <Optimize>true</Optimize>
-    <OutputPath>..\output\BitReconstructor.BinVote.GUI\bin-release\</OutputPath>
+    <OutputPath>..\release\BitReconstructor.BinVote.GUI\bin\</OutputPath>
     <DocumentationFile>BitReconstructor.BinVote.GUI.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>

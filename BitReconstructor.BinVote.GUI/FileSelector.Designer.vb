@@ -55,18 +55,18 @@ Partial Class FileSelector
         Me._inUseCheckBox.Text = "[ Input / Вход ]"
         Me._inUseCheckBox.UseVisualStyleBackColor = True
         '
-        '_inputSizeTextBox
+        '_fileSizeTextBox
         '
         Me._fileSizeTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me._fileSizeTextBox.Location = New System.Drawing.Point(886, 16)
-        Me._fileSizeTextBox.Name = "_inputSizeTextBox"
+        Me._fileSizeTextBox.Name = "_fileSizeTextBox"
         Me._fileSizeTextBox.ReadOnly = True
         Me._fileSizeTextBox.Size = New System.Drawing.Size(131, 20)
         Me._fileSizeTextBox.TabIndex = 4
         '
         '_selectButton
         '
-        Me._selectButton.Location = New System.Drawing.Point(6, 15)
+        Me._selectButton.Location = New System.Drawing.Point(7, 15)
         Me._selectButton.Name = "_selectButton"
         Me._selectButton.Size = New System.Drawing.Size(40, 22)
         Me._selectButton.TabIndex = 1

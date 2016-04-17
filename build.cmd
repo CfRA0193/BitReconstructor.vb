@@ -1,1 +1,3 @@
-C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.EXE BitReconstructor.BinVote.sln /p:Configuration=Release
+tools\vs-build-all.exe
+@rmdir /Q /S obj
+pause

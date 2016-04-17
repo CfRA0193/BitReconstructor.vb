@@ -8,17 +8,17 @@ Imports System.Runtime.InteropServices
 
 ' Review the values of the assembly attributes
 
-<Assembly: AssemblyTitle("BitReconstructor.BinVote.GUI")> 
-<Assembly: AssemblyDescription("Low-level data correction via binary voting")> 
-<Assembly: AssemblyCompany("Artem Drobanov (DrAF)")> 
-<Assembly: AssemblyProduct("BitReconstructor.BinVote.GUI")>
+<Assembly: AssemblyTitle("BitDeconstructor")>
+<Assembly: AssemblyDescription("Byte-level secret decomposition")>
+<Assembly: AssemblyCompany("Artem Drobanov (DrAF)")>
+<Assembly: AssemblyProduct("BitDeconstructor")>
 <Assembly: AssemblyCopyright("Copyright © DrAF 2015-2016")>
-<Assembly: AssemblyTrademark("BitReconstructor")> 
+<Assembly: AssemblyTrademark("BitDeconstructor")>
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("799d1f87-ef7d-4b18-be43-709c1650912a")>
+<Assembly: Guid("b907c7cd-23fe-428f-ac08-7d7f234a4dcc")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.16108.9")>
-<Assembly: AssemblyFileVersion("1.0.16108.9")>
+<Assembly: AssemblyVersion("1.0.16108.1")>
+<Assembly: AssemblyFileVersion("1.0.16108.1")>

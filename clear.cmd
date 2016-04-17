@@ -1,3 +1,4 @@
+@del /Q /A:H *.suo
 @del /Q /S *.ncb
 @del /Q /S *.cache
 @del /Q /S *.user
@@ -11,18 +12,7 @@
 	@cd ..
 )
 
-@for /D %%i in (*Release) do @(
-	@rmdir /Q /S %%i
-)
-
 @for /D %%i in (*Debug) do @(
 	@rmdir /Q /S %%i
 )
 
-@for /D %%i in (*Output) do @(
-	@rmdir /Q /S %%i
-)
-
-@for /D %%i in (*-out) do @(
-	@rmdir /Q /S %%i
-)

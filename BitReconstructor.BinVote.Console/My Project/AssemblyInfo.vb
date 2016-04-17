@@ -11,14 +11,14 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("BitReconstructor.BinVote.Console")> 
 <Assembly: AssemblyDescription("Low-level data correction via binary voting")> 
 <Assembly: AssemblyCompany("Artem Drobanov (DrAF)")> 
-<Assembly: AssemblyProduct("BitReconstructor.BinVote.Console")> 
-<Assembly: AssemblyCopyright("Copyright © DrAF 2015")> 
+<Assembly: AssemblyProduct("BitReconstructor.BinVote.Console")>
+<Assembly: AssemblyCopyright("Copyright © DrAF 2015-2016")>
 <Assembly: AssemblyTrademark("BitReconstructor")> 
 
 <Assembly: ComVisible(False)>
 
 'The following GUID is for the ID of the typelib if this project is exposed to COM
-<Assembly: Guid("9b8971c4-c488-4d1a-8d08-682a81dddb1c")> 
+<Assembly: Guid("9b8971c4-c488-4d1a-8d08-682a81dddb1c")>
 
 ' Version information for an assembly consists of the following four values:
 '
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.15151.7")> 
-<Assembly: AssemblyFileVersion("1.0.15151.7")> 
+<Assembly: AssemblyVersion("1.0.16108.9")>
+<Assembly: AssemblyFileVersion("1.0.16108.9")>
