@@ -46,7 +46,7 @@ Public Module BinVoteTest
             inputs(i) = New MemoryStream(streamLength) : weights(i) = 1.0
         Next
         Dim output As New MemoryStream(streamLength) : FillAndPrepareStreams(etalon, inputs, streamLength)
-        Dim stopWatch As New Stopwatch() : stopWatch.Start() : BinVote.Process(inputs, weights, output, Nothing, Nothing) : stopWatch.Stop()
+        Dim stopWatch As New Stopwatch() : stopWatch.Start() : BinVote.Process(inputs, weights, output, Nothing, Nothing, Nothing) : stopWatch.Stop()
         Dim allOk = CompareStreams(etalon, output)
         For i = 0 To inputsCount - 1
             If inputs(i) IsNot Nothing Then inputs(i).Close()

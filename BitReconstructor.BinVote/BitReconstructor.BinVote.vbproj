@@ -99,6 +99,12 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BitDeconstructor\BitDeconstructor.vbproj">
+      <Project>{608b4d99-d110-4f8b-9125-843dd1b5fdb6}</Project>
+      <Name>BitDeconstructor</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

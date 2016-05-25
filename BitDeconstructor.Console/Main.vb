@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Text
 Imports Bwl.Framework
 
 Module Main
@@ -8,8 +9,9 @@ Module Main
 
     Private Sub LogoOut()
         Console.ForegroundColor = ConsoleColor.Green
-        Console.WriteLine(" B i t")
-        Console.WriteLine(" D E C O N S T R U C T O R    ")
+        Console.WriteLine("")
+        Console.WriteLine(" B i t ")
+        Console.WriteLine(" D E C O N S T R U C T O R ")
         Console.WriteLine(" " + My.Application.Info.Version.ToString())
         Console.ForegroundColor = ConsoleColor.DarkGreen
         Console.WriteLine(_authorString)
@@ -22,12 +24,23 @@ Module Main
         _N = New IntegerSetting(_consoleAppBase.RootStorage, "N", 3)
         _consoleAppBase.RootStorage.SaveSettings(False)
         LogoOut()
-        For i = 0 To args.Length - 1
-            Dim fileName = args(i)
-            Console.WriteLine(" Processing {0}: {1} / {2} (N:{3})", Path.GetFileName(fileName), (i + 1), args.Length, _N.Value)
-            If File.Exists(fileName) Then
-                BitDeconstructor.Deconstruction(fileName, _N.Value)
-            End If
-        Next
+        If args.Length = 0 Then
+            Console.WriteLine(" BitDeconstructor.Console <input file> [ <scrambling key> ]")
+            Return
+        End If
+        If args.Length = 1 Then
+            Dim fileName = args(0)
+            Console.WriteLine(" Processing: {0}...", Path.GetFileName(fileName), _N.Value)
+            BitDeconstructor.Deconstruction(fileName, _N.Value, Nothing)
+            Console.WriteLine(" All Done!")
+        Else
+            Dim fileName = args(0)
+            Dim key = Encoding.UTF8.GetBytes(args(1))
+            Dim keyBase64 = Convert.ToBase64String(key)
+            File.WriteAllText(String.Format("{0}{1}", fileName, BitScrambler.Ext), keyBase64)
+            Console.WriteLine(" Processing with scrambling: {0}...", Path.GetFileName(fileName), _N.Value)
+            BitDeconstructor.Deconstruction(fileName, _N.Value, key)
+            Console.WriteLine(" All Done!")
+        End If
     End Sub
 End Module

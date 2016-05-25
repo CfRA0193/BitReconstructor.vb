@@ -1,7 +1,8 @@
 ﻿Imports System.IO
 
 Public Module BitDeconstructor
-    Private _rnd = New Random(Now.Ticks Mod Integer.MaxValue)
+    Private _rnd As New Random(Now.Ticks Mod Integer.MaxValue)
+    Private _scr As BitScrambler
     Public Property SyncRoot As New Object
 
     Public Sub Seed(seed As Long)
@@ -11,7 +12,14 @@ Public Module BitDeconstructor
     End Sub
 
     Public Sub Deconstruction(fileName As String, N As Integer)
+        Deconstruction(fileName, N, Nothing)
+    End Sub
+
+    Public Sub Deconstruction(fileName As String, N As Integer, key As Byte())
         SyncLock SyncRoot
+            If key IsNot Nothing Then
+                _scr = New BitScrambler(key)
+            End If
             Dim inputStream = New BufferedStream(New FileStream(fileName, FileMode.Open))
             Dim outStreams = New Stream(N - 1) {}
             For i = 0 To N - 1
@@ -25,6 +33,9 @@ Public Module BitDeconstructor
             Dim mixBuffer = New Byte(N - 1) {}
             For i = 0 To inputStream.Length - 1
                 Dim s = inputStream.ReadByte()
+                If _scr IsNot Nothing Then
+                    s = _scr.ProcessByte(s)
+                End If
                 For j = 0 To mixBuffer.Length - 1
                     mixBuffer(j) = s
                 Next

@@ -37,7 +37,6 @@ Module BinVoteConsole
 
     Sub Main(args As String())
         LogoOut()
-        'Dim files = New String() {"D:\Temp\ "}
         If BinVote.Process(args, _outputNameSpecified, True, AddressOf MessageOutHandler, AddressOf ProgressUpdatedHandler) Then
             Console.WriteLine(vbCrLf + " Processing: OK!")
         Else

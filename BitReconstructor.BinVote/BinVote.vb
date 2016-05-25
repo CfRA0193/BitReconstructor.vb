@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Text
 
 Public Delegate Sub ProgressUpdatedDelegate(progress As Single)
 Public Delegate Sub MessageOutDelegate(message As String, textColor As ConsoleColor)
@@ -94,16 +95,26 @@ Public Module BinVote
         Return files.ToArray()
     End Function
 
-    Public Function Process(args As String(), outputNameSpecified As Boolean, createOutput As Boolean, messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate) As Boolean
+    Public Function Process(args As String(), outputNameSpecified As Boolean, createOutput As Boolean,
+                            messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate) As Boolean
         If ShortTest(args.Length - 1, messageOutHandler) Then
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke("Self-test: OK", ConsoleColor.Gray)
         Else
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke("Self-test: Failed", ConsoleColor.Red)
             Return False
         End If
+
+        Dim files = args
+        Dim keyFilename = String.Empty
+        If files(files.Length - 2).EndsWith(BitScrambler.Ext) Then
+            keyFilename = files(files.Length - 2)
+            files(files.Length - 2) = files(files.Length - 1)
+            files = files.Take(files.Length - 1).ToArray()
+        End If
+
         Dim task As BinVoteTask = Nothing
         If args.Length = 1 Then
-            Dim files = EnumerateDir(args(0))
+            files = EnumerateDir(args(0))
             If files.Length > 3 Then
                 task = BinVote.GetBinVoteTask(BitReconstructorPrefix, files, outputNameSpecified, createOutput, messageOutHandler, progressUpdatedHandler)
             End If
@@ -120,21 +131,33 @@ Public Module BinVote
                 End If
             End If
         Else
-            ExecuteBinVoteTask(task, messageOutHandler, progressUpdatedHandler)
+            Dim key As Byte() = Nothing
+            If keyFilename <> String.Empty AndAlso File.Exists(keyFilename) Then
+                Try
+                    Console.WriteLine(String.Format(" Scrambler: {0}", keyFilename))
+                    key = Convert.FromBase64String(File.ReadAllText(keyFilename))
+                Catch
+                    key = Nothing
+                End Try
+            End If
+            Dim scr = New BitScrambler(key)
+            ExecuteBinVoteTask(task, messageOutHandler, scr, progressUpdatedHandler)
         End If
         Return True
     End Function
 
-    Public Function Process(inputs As Stream(), output As Stream, messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate,
+    Public Function Process(inputs As Stream(), output As Stream, scr As BitScrambler,
+                            messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate,
                             Optional ByVal streamBufferSize As Integer = InternalBufferSize) As Boolean
         Dim weights = New Integer(inputs.Length - 1) {}
         For i = 0 To weights.Length - 1
             weights(i) = 1
         Next
-        Return Process(inputs, weights, output, messageOutHandler, progressUpdatedHandler, streamBufferSize)
+        Return Process(inputs, weights, output, scr, messageOutHandler, progressUpdatedHandler, streamBufferSize)
     End Function
 
-    Public Function Process(inputs As Stream(), weights As Integer(), output As Stream, messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate,
+    Public Function Process(inputs As Stream(), weights As Integer(), output As Stream, scr As BitScrambler,
+                            messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate,
                             Optional ByVal streamBufferSize As Integer = InternalBufferSize) As Boolean
         If inputs.Length <> weights.Length Then
             Throw New Exception("inputs.Length <> weights.Length")
@@ -157,7 +180,7 @@ Public Module BinVote
             Next
             outputBuffer = New Byte(streamBufferSize - 1) {}
             For i = 0 To fullBufferIters - 1
-                FillInputBuffers(inputBuffers, inputs) : Process(inputBuffers, weights, outputBuffer) : output.Write(outputBuffer, 0, outputBuffer.Length)
+                FillInputBuffers(inputBuffers, inputs) : Process(inputBuffers, weights, outputBuffer, scr) : output.Write(outputBuffer, 0, outputBuffer.Length)
                 If progressUpdatedHandler IsNot Nothing Then progressUpdatedHandler.Invoke((i + 1) / CSng(fullBufferIters + 1))
             Next
         End If
@@ -167,7 +190,7 @@ Public Module BinVote
                 inputBuffers(i) = New Byte(remainBytes - 1) {}
             Next
             outputBuffer = New Byte(remainBytes - 1) {}
-            FillInputBuffers(inputBuffers, inputs) : Process(inputBuffers, weights, outputBuffer)  'output.Write(outputBuffer, 0, outputBuffer.Length)
+            FillInputBuffers(inputBuffers, inputs) : Process(inputBuffers, weights, outputBuffer, scr)
             output.Write(outputBuffer, 0, outputBuffer.Length)
         End If
         If progressUpdatedHandler IsNot Nothing Then progressUpdatedHandler.Invoke(1.0F)
@@ -214,7 +237,8 @@ Public Module BinVote
         Array.Copy(inputsFilteredList.ToArray(), inputs, inputs.Length) : Array.Copy(weightsFilteredList.ToArray(), weights, weights.Length)
     End Sub
 
-    Private Function GetBinVoteTask(prefix As String, args As String(), outputNameSpecified As Boolean, createOutput As Boolean, messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate) As BinVoteTask
+    Private Function GetBinVoteTask(prefix As String, args As String(), outputNameSpecified As Boolean, createOutput As Boolean,
+                                    messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate) As BinVoteTask
         Dim binVoteStreamsCountMin = If(outputNameSpecified, BinVote.StreamsCountMin + 1, BinVote.StreamsCountMin)
         If args.Length >= binVoteStreamsCountMin Then
             Dim task = New BinVoteTask() With {.OutputFilename = If(outputNameSpecified, args(args.Length - 1), Path.Combine(Path.GetDirectoryName(args(0)), prefix + Path.GetFileName(args(0))))}
@@ -223,7 +247,7 @@ Public Module BinVote
             Dim streamBufferSize = TotalStreamBuffersSize \ argsList.Count : streamBufferSize = If(streamBufferSize < 1, 1, streamBufferSize)
             Try
                 For Each arg In argsList
-                    If File.Exists(arg) Then streams.Add(New BufferedStream(File.Open(arg, FileMode.Open), StreamBufferSize))
+                    If File.Exists(arg) Then streams.Add(New BufferedStream(File.Open(arg, FileMode.Open), streamBufferSize))
                 Next
                 task.InputStreams = streams.ToArray()
                 Dim weights = New Integer(task.InputStreams.Length - 1) {}
@@ -235,7 +259,7 @@ Public Module BinVote
                     If File.Exists(task.OutputFilename) Then
                         File.SetAttributes(task.OutputFilename, FileAttributes.Normal) : File.Delete(task.OutputFilename)
                     End If
-                    task.OutputStream = New BufferedStream(File.Open(task.OutputFilename, FileMode.CreateNew), StreamBufferSize)
+                    task.OutputStream = New BufferedStream(File.Open(task.OutputFilename, FileMode.CreateNew), streamBufferSize)
                 End If
             Catch ex As Exception
                 If messageOutHandler IsNot Nothing Then
@@ -247,10 +271,10 @@ Public Module BinVote
         Return Nothing
     End Function
 
-    Private Sub ExecuteBinVoteTask(task As BinVoteTask, messageOutHandler As MessageOutDelegate, progressUpdatedHandler As ProgressUpdatedDelegate)
+    Private Sub ExecuteBinVoteTask(task As BinVoteTask, messageOutHandler As MessageOutDelegate, scr As BitScrambler, progressUpdatedHandler As ProgressUpdatedDelegate)
         Try
             If messageOutHandler IsNot Nothing Then messageOutHandler.Invoke(String.Format("Output:    {0}", task.OutputFilename), ConsoleColor.Gray)
-            If BinVote.Process(task.InputStreams, task.OutputStream, messageOutHandler, progressUpdatedHandler) Then messageOutHandler.Invoke(String.Empty, ConsoleColor.Gray)
+            If BinVote.Process(task.InputStreams, task.OutputStream, scr, messageOutHandler, progressUpdatedHandler) Then messageOutHandler.Invoke(String.Empty, ConsoleColor.Gray)
             task.Close()
         Catch ex As Exception
             If messageOutHandler IsNot Nothing Then
@@ -269,16 +293,25 @@ Public Module BinVote
                                        End Sub)
     End Sub
 
-    Private Sub Process(inputBuffers As Byte()(), weights As Integer(), output As Byte())
+    Private Sub Process(inputBuffers As Byte()(), weights As Integer(), output As Byte(), scr As BitScrambler)
         Dim rowsCount = inputBuffers(0).Length
-        Parallel.For(0, rowsCount, Sub(row As Integer)
-                                       Dim slice As Byte() = New Byte(inputBuffers.Length - 1) {}
-                                       For i = 0 To inputBuffers.Length - 1
-                                           slice(i) = inputBuffers(i)(row)
-                                       Next
-                                       output(row) = Vote(slice, weights)
-                                   End Sub)
-        Return
+        If scr IsNot Nothing Then
+            For row = 0 To rowsCount - 1
+                Dim slice As Byte() = New Byte(inputBuffers.Length - 1) {}
+                For i = 0 To inputBuffers.Length - 1
+                    slice(i) = inputBuffers(i)(row)
+                Next
+                output(row) = scr.ProcessByte(Vote(slice, weights))
+            Next
+        Else
+            Parallel.For(0, rowsCount, Sub(row As Integer)
+                                           Dim slice As Byte() = New Byte(inputBuffers.Length - 1) {}
+                                           For i = 0 To inputBuffers.Length - 1
+                                               slice(i) = inputBuffers(i)(row)
+                                           Next
+                                           output(row) = Vote(slice, weights)
+                                       End Sub)
+        End If
     End Sub
 
     Private Function Vote(slice As Byte(), weights As Integer()) As Byte
