@@ -9,7 +9,7 @@ Imports System.Runtime.InteropServices
 ' Review the values of the assembly attributes
 
 <Assembly: AssemblyTitle("BitDeconstructor")>
-<Assembly: AssemblyDescription("Byte-level secret decomposition")>
+<Assembly: AssemblyDescription("Byte-level decomposition of the secret with the scrambling")>
 <Assembly: AssemblyCompany("Artem Drobanov (DrAF)")>
 <Assembly: AssemblyProduct("BitDeconstructor")>
 <Assembly: AssemblyCopyright("Copyright © DrAF 2015-2016")>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.16108.1")>
-<Assembly: AssemblyFileVersion("1.0.16108.1")>
+<Assembly: AssemblyVersion("1.0.16147.3")>
+<Assembly: AssemblyFileVersion("1.0.16147.3")>

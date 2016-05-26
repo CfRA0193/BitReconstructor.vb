@@ -33,9 +33,6 @@ Public Module BitDeconstructor
             Dim mixBuffer = New Byte(N - 1) {}
             For i = 0 To inputStream.Length - 1
                 Dim s = inputStream.ReadByte()
-                If _scr IsNot Nothing Then
-                    s = _scr.ProcessByte(s)
-                End If
                 For j = 0 To mixBuffer.Length - 1
                     mixBuffer(j) = s
                 Next
@@ -43,9 +40,15 @@ Public Module BitDeconstructor
                 For Each errorIdx In errorIdxs
                     mixBuffer(errorIdx) = RND(s) Mod Byte.MaxValue
                 Next
-                For j = 0 To mixBuffer.Length - 1
-                    outStreams(j).WriteByte(mixBuffer(j))
-                Next
+                If _scr IsNot Nothing Then
+                    For j = 0 To mixBuffer.Length - 1
+                        outStreams(j).WriteByte(_scr.ProcessByte(mixBuffer(j)))
+                    Next
+                Else
+                    For j = 0 To mixBuffer.Length - 1
+                        outStreams(j).WriteByte(mixBuffer(j))
+                    Next
+                End If
             Next
             inputStream.Close()
             For i = 0 To N - 1

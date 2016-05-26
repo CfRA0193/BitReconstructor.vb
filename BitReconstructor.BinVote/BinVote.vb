@@ -299,9 +299,9 @@ Public Module BinVote
             For row = 0 To rowsCount - 1
                 Dim slice As Byte() = New Byte(inputBuffers.Length - 1) {}
                 For i = 0 To inputBuffers.Length - 1
-                    slice(i) = inputBuffers(i)(row)
+                    slice(i) = scr.ProcessByte(inputBuffers(i)(row))
                 Next
-                output(row) = scr.ProcessByte(Vote(slice, weights))
+                output(row) = Vote(slice, weights)
             Next
         Else
             Parallel.For(0, rowsCount, Sub(row As Integer)
