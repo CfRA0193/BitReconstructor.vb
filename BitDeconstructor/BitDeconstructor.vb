@@ -20,7 +20,7 @@ Public Module BitDeconstructor
             If key IsNot Nothing Then
                 _scr = New BitScrambler(key)
             End If
-            Dim inputStream = New BufferedStream(New FileStream(fileName, FileMode.Open))
+            Dim inputStream = New BufferedStream(New FileStream(fileName, FileMode.Open, FileAccess.Read))
             Dim outStreams = New Stream(N - 1) {}
             For i = 0 To N - 1
                 Dim outFileName = String.Format("{0}.bitd.{1}", fileName, i)

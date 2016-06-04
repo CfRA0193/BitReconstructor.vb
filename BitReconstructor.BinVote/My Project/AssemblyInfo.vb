@@ -11,8 +11,8 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyTitle("BitReconstructor.BinVote")> 
 <Assembly: AssemblyDescription("Low-level data correction via binary voting")> 
 <Assembly: AssemblyCompany("Artem Drobanov (DrAF)")> 
-<Assembly: AssemblyProduct("BitReconstructor.BinVote")> 
-<Assembly: AssemblyCopyright("Copyright © DrAF 2015")> 
+<Assembly: AssemblyProduct("BitReconstructor.BinVote")>
+<Assembly: AssemblyCopyright("Copyright © DrAF 2015-2016")>
 <Assembly: AssemblyTrademark("BitReconstructor")> 
 
 <Assembly: ComVisible(False)>
@@ -31,5 +31,5 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.0.16147.11")>
-<Assembly: AssemblyFileVersion("1.0.16147.11")>
+<Assembly: AssemblyVersion("1.0.16156.15")>
+<Assembly: AssemblyFileVersion("1.0.16156.15")>

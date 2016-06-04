@@ -106,10 +106,12 @@ Public Module BinVote
 
         Dim files = args
         Dim keyFilename = String.Empty
-        If files(files.Length - 2).EndsWith(BitScrambler.Ext) Then
-            keyFilename = files(files.Length - 2)
-            files(files.Length - 2) = files(files.Length - 1)
-            files = files.Take(files.Length - 1).ToArray()
+        If files.Length >= 2 Then
+            If files(files.Length - 2).EndsWith(BitScrambler.Ext) Then
+                keyFilename = files(files.Length - 2)
+                files(files.Length - 2) = files(files.Length - 1)
+                files = files.Take(files.Length - 1).ToArray()
+            End If
         End If
 
         Dim task As BinVoteTask = Nothing
@@ -247,7 +249,7 @@ Public Module BinVote
             Dim streamBufferSize = TotalStreamBuffersSize \ argsList.Count : streamBufferSize = If(streamBufferSize < 1, 1, streamBufferSize)
             Try
                 For Each arg In argsList
-                    If File.Exists(arg) Then streams.Add(New BufferedStream(File.Open(arg, FileMode.Open), streamBufferSize))
+                    If File.Exists(arg) Then streams.Add(New BufferedStream(File.Open(arg, FileMode.Open, FileAccess.Read), streamBufferSize))
                 Next
                 task.InputStreams = streams.ToArray()
                 Dim weights = New Integer(task.InputStreams.Length - 1) {}
